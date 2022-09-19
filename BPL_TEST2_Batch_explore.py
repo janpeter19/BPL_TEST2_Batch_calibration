@@ -244,6 +244,25 @@ def newplot(title='Batch cultivation', plotType='TimeSeries'):
       diagrams.clear()
       diagrams.append("ax1.plot(t,sim_res['bioreactor.c[2]'],color='b',linestyle=linetype)")
       diagrams.append("ax2.plot(t,sim_res['bioreactor.c[1]'],color='r',linestyle=linetype)")   
+      
+   elif plotType == 'Demo_2':
+   
+      plt.figure()
+      ax1 = plt.subplot(2,1,1)
+      ax2 = plt.subplot(2,1,2)
+
+      ax1.set_title(title)
+      ax1.grid()
+      ax1.set_ylabel('S [g/L]')
+      
+      ax2.grid()
+      ax2.set_ylabel('X [g/L]')
+      ax2.set_xlabel('Time [h]') 
+      
+      # List of commands to be executed by simu() after a simulation  
+      diagrams.clear()
+      diagrams.append("ax1.plot(t,sim_res['bioreactor.c[2]'],'b*')")
+      diagrams.append("ax2.plot(t,sim_res['bioreactor.c[1]'],'r*')")   
 
    elif plotType == 'PhasePlane':
 
