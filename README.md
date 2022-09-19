@@ -10,10 +10,13 @@ In Figure 1 below we see the results of fitting the model to simulated data and 
 
 ![](Fig_1_Batch_simu_data.png)
 
+**Figure 1** Simulation (solid liine) with estimated parameters compared to the data (asterix).
+
 In Figure 2 we see the contour plot of the loss function, simplified by keeping the Ks-parameter value constant. Clearly there is a unique minima for the range of parameters considered. Further the contours has an ellipsoid-shape. The more narrow the form is the harder the parameter estimation problem is. In this case not too difficult. 
 
 ![](Fig_2_Batch_loss_function_contour.png)
 
+**Figure 2** Contour plot of the simplified loss function, keeping parameter Ks fixed. The final estimated parameters are marked (black +).
 
 A Jupyter notebook that go through the parameter estimation and generate the figures above you click here
 [start BPL notebook](https://colab.research.google.com/github/janpeter19/BPL_TEST2_Batch_calibration/blob/main/BPL_TEST2_Batch_calibration_colab.ipynb).
