@@ -22,8 +22,6 @@ A Jupyter notebook that go through the parameter estimation and generate the fig
 [start BPL notebook](https://colab.research.google.com/github/janpeter19/BPL_TEST2_Batch_calibration/blob/main/BPL_TEST2_Batch_calibration_colab.ipynb).
 In the menu choose Runtime/Run all. The installation takes just a few minutes. The subsequent execution of all the simulations takes just about a minute or so.
 
-Note, that you can easily change from working with simulated data to your own measurement data stored in an excel-file on your own computer. Just follow the instruction in the notebook!
-
 License information:
 * The binary-file with extension FMU is shared under the permissive MIT-license
 * The other files are shared under the GPL 3.0 license

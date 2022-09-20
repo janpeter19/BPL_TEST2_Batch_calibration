@@ -4,3 +4,6 @@ BPL_TEST2_Batch_result.mat
 BPL_TEST2_Batch_windows_jm_cs.fmu
 .DS_Store
 data_batch_2.xlsx
+data_batch.xlsx
+xBPL_TEST2_Batch_linux_jm_cs.fmu
+xFig_2_Batch_loss_function_contour.png
