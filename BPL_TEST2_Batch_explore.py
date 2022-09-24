@@ -49,6 +49,7 @@
 # 2022-04-29 - Updated to FMU-explore 0.9.1 
 # 2022-05-28 - Introduce variable mu in parLocation for use in describe() but also disp()
 # 2022-09-16 - Updated for FMU-explore 0.9.3
+# 2022-09-22 - Updated for FMU-explore 0.9.4 -include scipy version when used in the notebook
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -318,7 +319,7 @@ def describe(name, decimals=3):
       
 #------------------------------------------------------------------------------------------------------------------
 #  General code 
-FMU_explore = 'FMU-explore ver 0.9.3'
+FMU_explore = 'FMU-explore ver 0.9.4'
 #------------------------------------------------------------------------------------------------------------------
 
 # Define function par() for parameter update
@@ -575,6 +576,11 @@ def system_info():
    print('System information')
    print(' -OS:', platform.system())
    print(' -Python:', platform.python_version())
+   try:
+       scipy_ver = scipy.__version__
+       print(' -Scipy:',scipy_ver)
+   except NameError:
+       print(' -Scipy: not installed in the notebook')
    print(' -PyFMI:', version('pyfmi'))
    print(' -FMU by:', model.get_generation_tool())
    print(' -FMI:', model.get_version())
