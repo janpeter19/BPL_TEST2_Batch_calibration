@@ -50,6 +50,7 @@
 # 2022-05-28 - Introduce variable mu in parLocation for use in describe() but also disp()
 # 2022-09-16 - Updated for FMU-explore 0.9.3
 # 2022-09-22 - Updated for FMU-explore 0.9.4 -include scipy version when used in the notebook
+# 2022-10-05 - Updated for FMU-explore 0.9.5 with disp() that do not include extra parameters with parLocation
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -359,7 +360,7 @@ def disp(name='', decimals=3, mode='short'):
    
    if mode in ['short']:
       k = 0
-      for Location in parLocation.values():
+      for Location in [parLocation[k] for k in parDict.keys()]:
          if name in Location:
             if type(model.get(Location)[0]) != np.bool_:
                print(dict_reverser(parLocation)[Location] , ':', np.round(model.get(Location)[0],decimals))
@@ -376,7 +377,7 @@ def disp(name='', decimals=3, mode='short'):
                   print(parName,':', model.get(parLocation[parName])[0])
    if mode in ['long','location']:
       k = 0
-      for Location in parLocation.values():
+      for Location in [parLocation[k] for k in parDict.keys()]:
          if name in Location:
             if type(model.get(Location)[0]) != np.bool_:       
                print(Location,':', dict_reverser(parLocation)[Location] , ':', np.round(model.get(Location)[0],decimals))
