@@ -19,7 +19,7 @@ In Figure 2 we see the contour plot of the loss function, simplified by keeping 
 **Figure 2** Contour plot of the simplified loss function, keeping parameter Ks fixed. The final estimated parameters are marked (black +).
 
 A Jupyter notebook that go through the parameter estimation and generate the figures above you have here
-[start BPL notebook](https://colab.research.google.com/github/janpeter19/BPL_TEST2_Batch_calibration/blob/main/BPL_TEST2_Batch_calibration_colab.ipynb).
+[start BPL notebook](https://colab.research.google.com/github/janpeter19/BPL_TEST2_Batch_calibration/blob/main/BPL_TEST2_Batch_calibration_colab_me.ipynb).
 In the menu choose Runtime/Run all. The installation takes just a few minutes. The subsequent execution of all the simulations takes just about a minute or so.
 
 License information:
