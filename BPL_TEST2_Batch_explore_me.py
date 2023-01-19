@@ -169,12 +169,13 @@ def newplot(title='Batch cultivation', plotType='TimeSeries'):
     
    # Reset pens
    setLines()
-    
+
+   # Transfer of global axes to simu()      
+   global ax1, ax2, ax3 
+   global ax11, ax12, ax21, ax22     
+
    # Plot diagram 
    if plotType == 'TimeSeries':
-
-      # Transfer of global axes to simu()      
-      global ax1, ax2      
    
       plt.figure()
       ax1 = plt.subplot(2,1,1)
@@ -194,6 +195,95 @@ def newplot(title='Batch cultivation', plotType='TimeSeries'):
       diagrams.append("ax1.plot(t,sim_res['bioreactor.c[2]'],color='b',linestyle=linetype)")   
       diagrams.append("ax1.legend(['X','S'])")   
       diagrams.append("ax2.plot(t,sim_res['bioreactor.culture.q[1]'],color='r',linestyle=linetype)")   
+
+   elif plotType == 'Textbook_1':
+   
+      plt.figure()
+      ax1 = plt.subplot(2,1,1)
+      ax2 = plt.subplot(2,1,2)
+
+      ax1.set_title(title)
+      ax1.grid()
+      ax1.set_ylabel('S [g/L]')
+      
+      ax2.grid()
+      ax2.set_ylabel('X [g/L]')
+      ax2.set_xlabel('Time [h]') 
+      
+      # List of commands to be executed by simu() after a simulation  
+      diagrams.clear()
+      diagrams.append("ax1.plot(t,sim_res['bioreactor.c[2]'],color='b',linestyle=linetype)")
+      diagrams.append("ax2.plot(t,sim_res['bioreactor.c[1]'],color='b',linestyle=linetype)")   
+
+   elif plotType == 'Textbook_2':
+   
+      plt.figure()
+      ax11 = plt.subplot(2,2,1)
+      ax12 = plt.subplot(2,2,2)
+      ax21 = plt.subplot(2,2,3)
+      ax22 = plt.subplot(2,2,4)
+
+      ax11.set_title(title)
+      ax11.grid()
+      ax11.set_ylabel('S [g/L]')
+      
+      ax21.grid()
+      ax21.set_ylabel('X [g/L]')
+      ax21.set_xlabel('Time [h]') 
+      
+      ax12.set_title(title)
+      ax12.grid()
+      ax12.set_ylabel('qS [g/(L*h)]')
+ 
+      ax22.grid()
+      ax22.set_ylabel('mu [1/h]')
+      ax22.set_xlabel('Time [h]')     
+           
+      # List of commands to be executed by simu() after a simulation  
+      diagrams.clear()
+      diagrams.append("ax11.plot(t,sim_res['bioreactor.c[2]'],color='b',linestyle=linetype)")
+      diagrams.append("ax21.plot(t,sim_res['bioreactor.c[1]'],color='b',linestyle=linetype)")
+      diagrams.append("ax12.set_title('- microscopic world')")   
+      diagrams.append("ax12.plot(t,-sim_res['bioreactor.culture.q[2]'],color='b',linestyle=linetype)")
+      diagrams.append("ax22.plot(t,sim_res['bioreactor.culture.q[1]'],color='b',linestyle=linetype)")    
+
+   elif plotType == 'Demo_1':
+   
+      plt.figure()
+      ax1 = plt.subplot(2,1,1)
+      ax2 = plt.subplot(2,1,2)
+
+      ax1.set_title(title)
+      ax1.grid()
+      ax1.set_ylabel('S [g/L]')
+      
+      ax2.grid()
+      ax2.set_ylabel('X [g/L]')
+      ax2.set_xlabel('Time [h]') 
+      
+      # List of commands to be executed by simu() after a simulation  
+      diagrams.clear()
+      diagrams.append("ax1.plot(t,sim_res['bioreactor.c[2]'],color='b',linestyle=linetype)")
+      diagrams.append("ax2.plot(t,sim_res['bioreactor.c[1]'],color='r',linestyle=linetype)")   
+      
+   elif plotType == 'Demo_2':
+   
+      plt.figure()
+      ax1 = plt.subplot(2,1,1)
+      ax2 = plt.subplot(2,1,2)
+
+      ax1.set_title(title)
+      ax1.grid()
+      ax1.set_ylabel('S [g/L]')
+      
+      ax2.grid()
+      ax2.set_ylabel('X [g/L]')
+      ax2.set_xlabel('Time [h]') 
+      
+      # List of commands to be executed by simu() after a simulation  
+      diagrams.clear()
+      diagrams.append("ax1.plot(t,sim_res['bioreactor.c[2]'],'b*')")
+      diagrams.append("ax2.plot(t,sim_res['bioreactor.c[1]'],'r*')")   
 
    elif plotType == 'PhasePlane':
 
