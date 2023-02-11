@@ -77,17 +77,33 @@ if platform.system() == 'Linux': locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 #  Setup application FMU
 #------------------------------------------------------------------------------------------------------------------
 
-# Define model file name and class name              
-#model_name = 'BPL_TEST2.Batch' 
-#application_file = 'BPL_TEST2.mo'
-#library_file = 'W:/BPL/package.mo'
-
 # Provde the right FMU and load for different platforms in user dialogue:
 global fmu_model, model
 if platform.system() == 'Windows':
    print('Windows - run FMU pre-compiled JModelica 2.14')
+   flag_vendor = 'JM'
+   flag_type = 'CS'
    fmu_model ='BPL_TEST2_Batch_windows_jm_cs.fmu'        
-   model = load_fmu(fmu_model, log_level=0)
+   model = load_fmu(fmu_model, log_level=0)  
+elif platform.system() == 'Linux':
+#   flag_vendor = input('Linux - run FMU from JModelica (JM) or OpenModelica (OM)?')  
+#   flag_type = input('Linux - run FMU-CS (CS) or ME (ME)?')  
+#   print()   
+   flag_vendor = 'OM'
+   flag_type = 'ME'
+   if flag_vendor in ['OM','om']:
+      print('Linux - run FMU pre-comiled OpenModelica 1.21.0') 
+      if flag_type in ['CS','cs']:         
+         fmu_model ='BPL_TEST2_Batch_linux_om_cs.fmu'    
+         model = load_fmu(fmu_model, log_level=0) 
+      if flag_type in ['ME','me']:         
+         fmu_model ='xBPL_TEST2_Batch_linux_om_me.fmu'    
+         model = load_fmu(fmu_model, log_level=0)
+   else:    
+      print('There is no FMU for this platform')
+
+# Provide various opts-profiles
+if flag_type in ['CS', 'cs']:
    opts_std = model.simulate_options()
    opts_std['silent_mode'] = True
    opts_std['ncp'] = 500 
@@ -99,36 +115,34 @@ if platform.system() == 'Windows':
    opts_data = model.simulate_options() 
    opts_data['silent_mode'] = True
    opts_data['ncp'] = 12 
-   opts_data['result_handling'] = 'binary'   
-   flag_vendor = 'JM'
-   flag_type = 'CS'
+   opts_data['result_handling'] = 'binary'      
+elif flag_type in ['ME', 'me']:
+   opts_std = model.simulate_options()
+   opts_std["CVode_options"]["verbosity"] = 50 
+   opts_std['ncp'] = 500 
+   opts_std['result_handling'] = 'binary'  
+   opts_fast = model.simulate_options()   
+   opts_fast["CVode_options"]["verbosity"] = 50 
+   opts_fast['ncp'] = 12 
+   opts_fast['result_handling'] = 'memory' 
+   opts_data = model.simulate_options() 
+   opts_data["CVode_options"]["verbosity"] = 50 
+   opts_data['ncp'] = 12 
+   opts_data['result_handling'] = 'binary' 
+else:    
+   print('There is no FMU for this platform')
+  
+# Provide various MSL and BPL versions
+if flag_vendor in ['JM', 'jm']:
    MSL_usage = model.get('MSL.usage')[0]
    MSL_version = model.get('MSL.version')[0]
    BPL_version = model.get('BPL.version')[0]
-elif platform.system() == 'Linux':
-#   flag_vendor = input('Linux - run FMU from JModelica (JM) or OpenModelica (OM)?')  
-#   flag_type = input('Linux - run FMU-CS (CS) or ME (ME)?')  
-#   print()   
-   flag_vendor = 'OM'
-   flag_type = 'ME'
-   if flag_vendor in ['OM','om']:
-      print('Linux - run FMU pre-comiled OpenModelica 1.21.0') 
-      if flag_type in ['CS','cs']:         
-         fmu_model ='BPL_TEST2_Batch_linux_om_cs.fmu'    
-         model = load_fmu(fmu_model, log_level=0)
-         opts = model.simulate_options()
-         opts['silent_mode'] = True 
-      if flag_type in ['ME','me']:         
-         fmu_model ='xBPL_TEST2_Batch_linux_om_me.fmu'    
-         model = load_fmu(fmu_model, log_level=0)
-         opts = model.simulate_options() 
-         opts["CVode_options"]["verbosity"] = 50 
-      MSL_usage = '3.2.3 - used components: RealInput, RealOutput, CombiTimeTable, Types' 
-      MSL_version = '3.2.3'
-      BPL_version = 'Bioprocess Library version 2.1.1-beta' 
-      
-   else:    
-      print('There is no FMU for this platform')
+elif flag_vendor in ['OM', 'om']:
+   MSL_usage = '3.2.3 - used components: RealInput, RealOutput, CombiTimeTable, Types' 
+   MSL_version = '3.2.3'
+   BPL_version = 'Bioprocess Library version 2.1.1-beta' 
+else:    
+   print('There is no FMU for this platform')
 
 
 # Simulation time
@@ -382,7 +396,6 @@ def par(parDict=parDict, parCheck=parCheck, parLocation=parLocation, *x, **x_kwa
    if not parErrors == []:
       print('Error - the following requirements do not hold:')
       for index, item in enumerate(parErrors): print(item)
-
 
 # Define function init() for initial values update
 def init(parDict=parDict, *x, **x_kwarg):
