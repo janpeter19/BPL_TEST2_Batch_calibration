@@ -18,6 +18,7 @@
 # 2022-10-15 - Improved simu() with argument output_interval special for fmpy and related to pyfmi ncp
 # 2023-02-27 - Update FMU-explore to 0.9.6 in one leap and added list key_variables for logging
 # 2023-02-28 - Place the list key_variables better
+# 2023-03-09 - Prepare for Google Colab use
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -57,8 +58,8 @@ if platform.system() == 'Windows':
    flag_vendor = 'JM' 
    flag_type = 'CS'
 elif platform.system() == 'Linux':
-   print('Linux - run FMU pre-compiled JModelica 2.4')
-   fmu_model ='BPL_TEST2_Batch_linux_jm_cs.fmu'  
+   print('Linux - run FMU pre-compiled OpenModelica 1.21.x')
+   fmu_model ='xBPL_TEST2_Batch_linux_om_me.fmu'  
    model_description = read_model_description(fmu_model)  
    flag_vendor = 'OM' 
    flag_type = 'ME'
