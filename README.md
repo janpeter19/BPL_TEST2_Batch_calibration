@@ -6,7 +6,7 @@ A bioprocess model need to be calibrated by estimating key process parameters. T
 
 We use here methods that only need evaluation of the loss function for each tested parameter setting, thus does not use derivative information. These methods are collected in Python Scipy-package in the function scipy.optimize.minimize() and it is easy to change method and adjust parameters of the algorithm. The advantage with these methods is that you can easilty address more complex models wich has non-linearities and more parameters. The drawback is that optimization is more time consuming than methods that use derivative information. 
 
-In Figure 1 below we see the results of fitting the model to simulated data and works perfectly well. Here parameters were given with min- and max-bounds. There are fewer methods that use bounds on parameters. Here we choose to work with SLSQP since it gave fasd and good convergence.
+In Figure 1 below we see the results of fitting the model to simulated data and works perfectly well. Here parameters were given with min- and max-bounds. There are fewer methods that use bounds on parameters. Here we choose to work with Nelder-Mead since it is robust and commonly used for a loss function including experimental data.
 
 ![](Fig_1_Batch_simu_data.png)
 
