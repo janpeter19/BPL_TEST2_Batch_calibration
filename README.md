@@ -22,7 +22,8 @@ A Jupyter notebook that go through the parameter estimation and generate the fig
 [start BPL notebook with PyFMI](https://colab.research.google.com/github/janpeter19/BPL_TEST2_Batch_calibration/blob/main/BPL_TEST2_Batch_calibration_colab.ipynb)
 or alternatively (experimentally)
 [start BPL notebook with FMPy](https://github.com/janpeter19/BPL_TEST2_Batch_calibration/blob/main/BPL_TEST2_Batch_calibration_fmpy_colab.ipynb).
-In the menu choose Runtime/Run all. The installation takes just a few minutes. The subsequent execution of all the simulations takes just about a minute or so.
+In the menu choose Runtime/Run all. If you use the alternative notebook click symbol Open in Colab first.
+The installation takes just a few minutes. The subsequent execution of all the simulations takes just about a minute or so.
 
 License information:
 * The binary-file with extension FMU is shared under the permissive MIT-license
