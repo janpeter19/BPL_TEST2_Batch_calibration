@@ -54,6 +54,7 @@
 # 2023-02-08 - Updated to FMU-explore 0.9.6e
 # 2023-02-11 - Consolidate FMU-explore to 0.9.6 and means parCheck and par() udpate and simu() with opts as arg
 # 2023-02-24 - Corrected MSL-suage information for OpenModelica Linux
+# 2023-03-21 - Clean-up and use standard FMU notation
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -98,7 +99,7 @@ elif platform.system() == 'Linux':
          fmu_model ='BPL_TEST2_Batch_linux_om_cs.fmu'    
          model = load_fmu(fmu_model, log_level=0) 
       if flag_type in ['ME','me']:         
-         fmu_model ='xBPL_TEST2_Batch_linux_om_me.fmu'    
+         fmu_model ='BPL_TEST2_Batch_linux_om_me.fmu'    
          model = load_fmu(fmu_model, log_level=0)
    else:    
       print('There is no FMU for this platform')
@@ -627,7 +628,7 @@ def BPL_info():
    print(' - newplot()   - make a new plot')
    print(' - show()      - show plot from previous simulation')
    print(' - disp()      - display parameters and initial values from the last simulation')
-   print(' - describe()  - describe culture, broth, parameters, variables with values / units')
+   print(' - describe()  - describe culture, broth, parameters, variables with values/units')
    print()
    print('Note that both disp() and describe() takes values from the last simulation')
    print()

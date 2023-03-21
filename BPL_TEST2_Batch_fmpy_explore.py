@@ -19,6 +19,7 @@
 # 2023-02-27 - Update FMU-explore to 0.9.6 in one leap and added list key_variables for logging
 # 2023-02-28 - Place the list key_variables better
 # 2023-03-09 - Prepare for Google Colab use
+# 2023-03-21 - Clean-up and use standard FMU notation
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -59,7 +60,7 @@ if platform.system() == 'Windows':
    flag_type = 'CS'
 elif platform.system() == 'Linux':
    print('Linux - run FMU pre-compiled OpenModelica 1.21.x')
-   fmu_model ='xBPL_TEST2_Batch_linux_om_me.fmu'  
+   fmu_model ='BPL_TEST2_Batch_linux_om_me.fmu'  
    model_description = read_model_description(fmu_model)  
    flag_vendor = 'OM' 
    flag_type = 'ME'
@@ -529,7 +530,7 @@ def BPL_info():
    print(' - newplot()   - make a new plot')
    print(' - show()      - show plot from previous simulation')
    print(' - disp()      - display parameters and initial values from the last simulation')
-   print(' - describe()  - describe culture, broth, parameters, variables with values / units')
+   print(' - describe()  - describe culture, broth, parameters, variables with values/units')
    print()
    print('Note that both disp() and describe() takes values from the last simulation')
    print()
