@@ -21,7 +21,7 @@ In Figure 2 we see the contour plot of the loss function, simplified by keeping 
 A Jupyter notebook that go through the parameter estimation and generate the figures above you have here
 [start BPL notebook with PyFMI](https://colab.research.google.com/github/janpeter19/BPL_TEST2_Batch_calibration/blob/main/BPL_TEST2_Batch_calibration_colab.ipynb)
 or alternatively (experimentally)
-[start BPL notebook with FMPy](https://github.com/janpeter19/BPL_TEST2_Batch_calibration/blob/main/BPL_TEST2_Batch_calibration_colab_fmpy.ipynb).
+[start BPL notebook with FMPy](https://github.com/janpeter19/BPL_TEST2_Batch_calibration/blob/main/BPL_TEST2_Batch_calibration_fmpy_colab.ipynb).
 In the menu choose Runtime/Run all. The installation takes just a few minutes. The subsequent execution of all the simulations takes just about a minute or so.
 
 License information:
