@@ -20,6 +20,7 @@
 # 2023-02-28 - Place the list key_variables better
 # 2023-03-09 - Prepare for Google Colab use
 # 2023-03-21 - Clean-up and use standard FMU notation
+# 2023-03-23 - Update FMU-explore to 0.9.7c
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -137,6 +138,9 @@ parLocation['Ks'] = 'bioreactor.culture.Ks'
 # Extra only for describe()
 global key_variables; key_variables = []
 parLocation['mu'] = 'bioreactor.culture.mu'; key_variables.append(parLocation['mu'])
+parLocation['bioreactor.V'] = 'bioreactor.V'; key_variables.append(parLocation['bioreactor.V'])
+parLocation['bioreactor.m[1]'] = 'bioreactor.m[1]'; key_variables.append(parLocation['bioreactor.m[1]'])
+parLocation['bioreactor.m[2]'] = 'bioreactor.m[2]'; key_variables.append(parLocation['bioreactor.m[2]'])
 
 # Parameter value check - especially for hysteresis to avoid runtime error
 global parCheck; parCheck = []
@@ -294,7 +298,7 @@ def describe(name, decimals=3):
       
 #------------------------------------------------------------------------------------------------------------------
 #  General code 
-FMU_explore = 'FMU-explore for FMPy version 0.9.6'
+FMU_explore = 'FMU-explore for FMPy version 0.9.7c'
 #------------------------------------------------------------------------------------------------------------------
 
 # Define function par() for parameter update
@@ -333,16 +337,22 @@ def model_get(parLoc, model_description=model_description):
    par_var = model_description.modelVariables
    for k in range(len(par_var)):
       if par_var[k].name == parLoc:
-         if par_var[k].variability in ['constant', 'fixed']:        
-            value = float(par_var[k].start)        
-         elif par_var[k].variability == 'continuous':
-            try:
-               timeSeries = sim_res[par_var[k].name]
-               value = timeSeries[-1]
-            except (AttributeError, ValueError):
+         try:
+            if par_var[k].name in start_values.keys():
+                  value = start_values[par_var[k].name]
+            elif par_var[k].variability in ['constant', 'fixed']:        
+                  value = float(par_var[k].start)     
+            elif par_var[k].variability == 'continuous':
+               try:
+                  timeSeries = sim_res[par_var[k].name]
+                  value = timeSeries[-1]
+               except (AttributeError, ValueError):
+                  value = None
+                  print('Variable not logged')
+            else:
                value = None
-               print('Variable not logged')
-         else:
+         except NameError:
+            print('Error: Information available after first simution')
             value = None
    return value
 
@@ -417,8 +427,8 @@ def show(diagrams=diagrams):
    for command in diagrams: eval(command)
 
 # Define simulation
-def simu(simulationTime=simulationTime, diagrams=diagrams, output_interval=None):
-   global sim_res
+def simu(simulationTime=simulationTime, mode='Initial', diagrams=diagrams, output_interval=None):
+   global sim_res, prevFinalTime, stateDict, stateDictInitial, stateDictInitialLoc, start_values
    
    def extract_variables(diagrams):
        output = []
@@ -428,24 +438,109 @@ def simu(simulationTime=simulationTime, diagrams=diagrams, output_interval=None)
                if variables[k].name in diagrams[j]:
                    output.append(variables[k].name)
        return output
-   
-   sim_res = simulate_fmu(
-      filename = fmu_model,
-      validate = False,
-      start_time = 0,
-      stop_time = simulationTime,
-      output_interval = output_interval,
-#      solver = 'CVode',
-#      step_size = 1e-2,
-      record_events = True,
-      start_values = {parLocation[k]:parDict[k] for k in parDict.keys()},
-      fmi_call_logger = None,
-      output = list(set(extract_variables(diagrams) + key_variables))
-   )
+
+   # Run simulation
+   if mode in ['Initial', 'initial', 'init']: 
+      
+      start_values = {parLocation[k]:parDict[k] for k in parDict.keys()}
+      
+      # Simulate
+      sim_res = simulate_fmu(
+         filename = fmu_model,
+         validate = False,
+         start_time = 0,
+         stop_time = simulationTime,
+         output_interval = output_interval,
+         record_events = True,
+         start_values = start_values,
+         fmi_call_logger = None,
+         output = list(set(extract_variables(diagrams) + key_variables))
+      )
+      
+   elif mode in ['Continued', 'continued', 'cont']:
+      
+      # Update parDictMod and create parLocationMod
+      try:
+         parDictRed = parDict.copy()
+         parLocationRed = parLocation.copy()
+         for key in parDict.keys():
+            if parLocation[key] in stateDictInitial.values(): 
+               del parDictRed[key]  
+               del parLocationRed[key]
+         parLocationMod = dict(list(parLocationRed.items()) + list(stateDictInitialLoc.items()))
+      
+         # Create parDictMod and parLocationMod
+         parDictMod = dict(list(parDictRed.items()) + 
+            [(stateDictInitial[key], stateDict[key]) for key in stateDict.keys()])      
+      except NameError:
+         print("Simulation is first done with default mode='init'")
+         prevFinalTime = 0
+  
+      start_values = {parLocationMod[k]:parDictMod[k] for k in parDictMod.keys()}
+  
+      # Simulate
+      sim_res = simulate_fmu(
+         filename = fmu_model,
+         validate = False,
+         start_time = prevFinalTime,
+         stop_time = prevFinalTime + simulationTime,
+         output_interval = output_interval,
+         record_events = True,
+         start_values = start_values,
+         fmi_call_logger = None,
+         output = list(set(extract_variables(diagrams) + key_variables))
+      )
+      
+   else:
+      print("Error: simulation mode not correct")
+
    # Plot diagrams from simulation
    linetype = next(linecycler)    
    for command in diagrams: eval(command)
+   
+   # Create once dictionaries related to handling the initial states
+   try: stateDict
+   except NameError:
+      # Creeate stateDict firt time
+      continuous_states = []
+      for variable in model_description.modelVariables:
+         if variable.derivative is not None: 
+            continuous_states.append(variable.derivative.name)
+      stateDict = {key:None for key in continuous_states}  
+      stateDict.update(timeDiscreteStates)  
       
+      # Create stateDictInitial first time
+      stateDictInitial = {}
+      for key in stateDict.keys():
+          if not key[-1] == ']':
+               if key[-3:] == 'I.y':
+                  stateDictInitial[key] = key[:-10]+'I_0'
+               elif key[-3:] == 'D.x':
+                  stateDictInitial[key] = key[:-10]+'D_0'
+               else:
+                  stateDictInitial[key] = key+'_0'
+          elif key[-3] == '[':
+              stateDictInitial[key] = key[:-3]+'_0'+key[-3:]
+          elif key[-4] == '[':
+              stateDictInitial[key] = key[:-4]+'_0'+key[-4:]
+          elif key[-5] == '[':
+              stateDictInitial[key] = key[:-5]+'_0'+key[-5:] 
+          else:
+              print('The state vector has more than 1000 states')
+              break
+      
+      # Create stateDictInitialLoc first time
+      stateDictInitialLoc = {}
+      for value in stateDictInitial.values():
+          stateDictInitialLoc[value] = value
+      
+   # Store final state values in stateDict:        
+   for key in list(stateDict.keys()):
+      stateDict[key] = model_get(key)  
+         
+   # Store time from where simulation will start next time
+   prevFinalTime = sim_res['time'][-1]
+         
 # Describe model parts of the combined system
 def describe_parts(component_list=[]):
    """List all parts of the model""" 
