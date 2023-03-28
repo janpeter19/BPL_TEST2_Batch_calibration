@@ -21,6 +21,7 @@
 # 2023-03-09 - Prepare for Google Colab use
 # 2023-03-21 - Clean-up and use standard FMU notation
 # 2023-03-23 - Update FMU-explore to 0.9.7c
+# 2023-03-28 - Update FMU-explore to 0.9.7
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -37,9 +38,6 @@ import matplotlib.pyplot as plt
 from fmpy import simulate_fmu
 from fmpy import read_model_description
 import fmpy as fmpy
-
-#from pyfmi import load_fmu
-#from pyfmi.fmi import FMUException
 
 from itertools import cycle
 from importlib_metadata import version   # included in future Python 3.8
@@ -69,18 +67,16 @@ else:
    print('There is no FMU for this platform')
 
 # Provide various opts-profiles
-#if flag_type in ['CS', 'cs']:
-#   opts_std = model.simulate_options()
-#   opts_std['silent_mode'] = True
-#   opts_std['ncp'] = 500 
-#   opts_std['result_handling'] = 'binary'     
-#elif flag_type in ['ME', 'me']:
-#   opts_std = model.simulate_options()
-#   opts_std["CVode_options"]["verbosity"] = 50 
-#   opts_std['ncp'] = 500 
-#   opts_std['result_handling'] = 'binary'  
-#else:    
-#   print('There is no FMU for this platform')
+if flag_type in ['CS', 'cs']:
+   opts_std = {'NCP': 500}
+   opts_data = {'NCP': 12}
+   opts_fast = {'NCP': 12}
+elif flag_type in ['ME', 'me']:
+   opts_std = {'NCP': 500}
+   opts_data = {'NCP': 12}
+   opts_fast = {'NCP': 12}
+else:    
+   print('There is no FMU for this platform')
 
 # Extract model_description from fmu_model
 model_description = read_model_description(fmu_model)
@@ -101,6 +97,7 @@ else:
 
 # Simulation time
 global simulationTime; simulationTime = 5.0
+global prevFinalTime; prevFinalTime = 0
 
 # Dictionary of time discrete states
 timeDiscreteStates = {} 
@@ -113,8 +110,33 @@ component_list_minimum = ['bioreactor', 'bioreactor.culture']
 #------------------------------------------------------------------------------------------------------------------
 
 # Create stateDict that later will be used to store final state and used for initialization in 'cont':
-#stateDict = model.get_states_list()
-global stateDict
+global stateDict; stateDict =  {}
+stateDict = {variable.derivative.name:None for variable in model_description.modelVariables \
+                                            if variable.derivative is not None}
+stateDict.update(timeDiscreteStates) 
+
+global stateDictInitial; stateDictInitial = {}
+for key in stateDict.keys():
+    if not key[-1] == ']':
+         if key[-3:] == 'I.y':
+            stateDictInitial[key] = key[:-10]+'I_0'
+         elif key[-3:] == 'D.x':
+            stateDictInitial[key] = key[:-10]+'D_0'
+         else:
+            stateDictInitial[key] = key+'_0'
+    elif key[-3] == '[':
+        stateDictInitial[key] = key[:-3]+'_0'+key[-3:]
+    elif key[-4] == '[':
+        stateDictInitial[key] = key[:-4]+'_0'+key[-4:]
+    elif key[-5] == '[':
+        stateDictInitial[key] = key[:-5]+'_0'+key[-5:] 
+    else:
+        print('The state vector has more than 1000 states')
+        break
+
+global stateDictInitialLoc; stateDictInitialLoc = {}
+for value in stateDictInitial.values(): stateDictInitialLoc[value] = value
+
 
 # Create dictionaries parDict[] and parLocation[]
 global parDict; parDict = {}
@@ -138,9 +160,6 @@ parLocation['Ks'] = 'bioreactor.culture.Ks'
 # Extra only for describe()
 global key_variables; key_variables = []
 parLocation['mu'] = 'bioreactor.culture.mu'; key_variables.append(parLocation['mu'])
-parLocation['bioreactor.V'] = 'bioreactor.V'; key_variables.append(parLocation['bioreactor.V'])
-parLocation['bioreactor.m[1]'] = 'bioreactor.m[1]'; key_variables.append(parLocation['bioreactor.m[1]'])
-parLocation['bioreactor.m[2]'] = 'bioreactor.m[2]'; key_variables.append(parLocation['bioreactor.m[2]'])
 
 # Parameter value check - especially for hysteresis to avoid runtime error
 global parCheck; parCheck = []
@@ -298,7 +317,7 @@ def describe(name, decimals=3):
       
 #------------------------------------------------------------------------------------------------------------------
 #  General code 
-FMU_explore = 'FMU-explore for FMPy version 0.9.7c'
+FMU_explore = 'FMU-explore for FMPy version 0.9.7'
 #------------------------------------------------------------------------------------------------------------------
 
 # Define function par() for parameter update
@@ -427,9 +446,16 @@ def show(diagrams=diagrams):
    for command in diagrams: eval(command)
 
 # Define simulation
-def simu(simulationTime=simulationTime, mode='Initial', diagrams=diagrams, output_interval=None):
+def simu(simulationTime=simulationTime, mode='Initial', options=opts_std, diagrams=diagrams):
+   """Model loaded and given intial values and parameter before, and plot window also setup before."""   
+   
+   # Global variables
    global sim_res, prevFinalTime, stateDict, stateDictInitial, stateDictInitialLoc, start_values
    
+   # Simulation flag
+   simulationDone = False
+   
+   # Internal help function to extract variables to be stored
    def extract_variables(diagrams):
        output = []
        variables = [v for v in model_description.modelVariables if v.causality == 'local']
@@ -450,17 +476,22 @@ def simu(simulationTime=simulationTime, mode='Initial', diagrams=diagrams, outpu
          validate = False,
          start_time = 0,
          stop_time = simulationTime,
-         output_interval = output_interval,
+         output_interval = simulationTime/options['NCP'],
          record_events = True,
          start_values = start_values,
          fmi_call_logger = None,
-         output = list(set(extract_variables(diagrams) + key_variables))
+         output = list(set(extract_variables(diagrams) + list(stateDict.keys()) + key_variables))
       )
+      
+      simulationDone = True
       
    elif mode in ['Continued', 'continued', 'cont']:
       
-      # Update parDictMod and create parLocationMod
-      try:
+      if prevFinalTime == 0: 
+         print("Error: Simulation is first done with default mode = init'")
+         
+      else:         
+         # Update parDictMod and create parLocationMod
          parDictRed = parDict.copy()
          parLocationRed = parLocation.copy()
          for key in parDict.keys():
@@ -468,79 +499,46 @@ def simu(simulationTime=simulationTime, mode='Initial', diagrams=diagrams, outpu
                del parDictRed[key]  
                del parLocationRed[key]
          parLocationMod = dict(list(parLocationRed.items()) + list(stateDictInitialLoc.items()))
-      
+   
          # Create parDictMod and parLocationMod
          parDictMod = dict(list(parDictRed.items()) + 
             [(stateDictInitial[key], stateDict[key]) for key in stateDict.keys()])      
-      except NameError:
-         print("Simulation is first done with default mode='init'")
-         prevFinalTime = 0
+
+         start_values = {parLocationMod[k]:parDictMod[k] for k in parDictMod.keys()}
   
-      start_values = {parLocationMod[k]:parDictMod[k] for k in parDictMod.keys()}
-  
-      # Simulate
-      sim_res = simulate_fmu(
-         filename = fmu_model,
-         validate = False,
-         start_time = prevFinalTime,
-         stop_time = prevFinalTime + simulationTime,
-         output_interval = output_interval,
-         record_events = True,
-         start_values = start_values,
-         fmi_call_logger = None,
-         output = list(set(extract_variables(diagrams) + key_variables))
-      )
+         # Simulate
+         sim_res = simulate_fmu(
+            filename = fmu_model,
+            validate = False,
+            start_time = prevFinalTime,
+            stop_time = prevFinalTime + simulationTime,
+            output_interval = simulationTime/options['NCP'],
+            record_events = True,
+            start_values = start_values,
+            fmi_call_logger = None,
+            output = list(set(extract_variables(diagrams) + list(stateDict.keys()) + key_variables))
+         )
+      
+         simulationDone = True
+   else:
+      
+      print("Error: Simulation mode not correct")
+
+   if simulationDone:
+      
+      # Plot diagrams from simulation
+      linetype = next(linecycler)    
+      for command in diagrams: eval(command)
+   
+      # Store final state values in stateDict:        
+      for key in stateDict.keys(): stateDict[key] = model_get(key)  
+         
+      # Store time from where simulation will start next time
+      prevFinalTime = sim_res['time'][-1]
       
    else:
-      print("Error: simulation mode not correct")
-
-   # Plot diagrams from simulation
-   linetype = next(linecycler)    
-   for command in diagrams: eval(command)
-   
-   # Create once dictionaries related to handling the initial states
-   try: stateDict
-   except NameError:
-      # Creeate stateDict firt time
-      continuous_states = []
-      for variable in model_description.modelVariables:
-         if variable.derivative is not None: 
-            continuous_states.append(variable.derivative.name)
-      stateDict = {key:None for key in continuous_states}  
-      stateDict.update(timeDiscreteStates)  
-      
-      # Create stateDictInitial first time
-      stateDictInitial = {}
-      for key in stateDict.keys():
-          if not key[-1] == ']':
-               if key[-3:] == 'I.y':
-                  stateDictInitial[key] = key[:-10]+'I_0'
-               elif key[-3:] == 'D.x':
-                  stateDictInitial[key] = key[:-10]+'D_0'
-               else:
-                  stateDictInitial[key] = key+'_0'
-          elif key[-3] == '[':
-              stateDictInitial[key] = key[:-3]+'_0'+key[-3:]
-          elif key[-4] == '[':
-              stateDictInitial[key] = key[:-4]+'_0'+key[-4:]
-          elif key[-5] == '[':
-              stateDictInitial[key] = key[:-5]+'_0'+key[-5:] 
-          else:
-              print('The state vector has more than 1000 states')
-              break
-      
-      # Create stateDictInitialLoc first time
-      stateDictInitialLoc = {}
-      for value in stateDictInitial.values():
-          stateDictInitialLoc[value] = value
-      
-   # Store final state values in stateDict:        
-   for key in list(stateDict.keys()):
-      stateDict[key] = model_get(key)  
-         
-   # Store time from where simulation will start next time
-   prevFinalTime = sim_res['time'][-1]
-         
+      print('Error: No simulation done')
+            
 # Describe model parts of the combined system
 def describe_parts(component_list=[]):
    """List all parts of the model""" 
