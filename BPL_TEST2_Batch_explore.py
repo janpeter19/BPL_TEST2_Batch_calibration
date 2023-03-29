@@ -56,6 +56,7 @@
 # 2023-02-24 - Corrected MSL-suage information for OpenModelica Linux
 # 2023-03-21 - Clean-up and use standard FMU notation
 # 2023-03-28 - Update FMU-explore 0.9.7
+# 2023-03-29 - Update FMU-explore 0.9.7 competed!
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -163,8 +164,9 @@ component_list_minimum = ['bioreactor', 'bioreactor.culture']
 #------------------------------------------------------------------------------------------------------------------
 
 # Create stateDict that later will be used to store final state and used for initialization in 'cont':
-#stateDict = model.get_states_list()
-global stateDict
+global stateDict; stateDict =  {}
+stateDict = model.get_states_list()
+stateDict.update(timeDiscreteStates)
 
 # Create dictionaries parDict[] and parLocation[]
 global parDict; parDict = {}
