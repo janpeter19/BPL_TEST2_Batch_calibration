@@ -22,6 +22,7 @@
 # 2023-03-21 - Clean-up and use standard FMU notation
 # 2023-03-23 - Update FMU-explore to 0.9.7c
 # 2023-03-28 - Update FMU-explore to 0.9.7
+# 2023-04-19 - Compiled for Ubuntu 20.04 and changed BPL_version
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -58,7 +59,7 @@ if platform.system() == 'Windows':
    flag_vendor = 'JM' 
    flag_type = 'CS'
 elif platform.system() == 'Linux':
-   print('Linux - run FMU pre-compiled OpenModelica 1.21.x')
+   print('Linux - run FMU pre-compiled OpenModelica 1.21.0')
    fmu_model ='BPL_TEST2_Batch_linux_om_me.fmu'  
    model_description = read_model_description(fmu_model)  
    flag_vendor = 'OM' 
@@ -91,7 +92,7 @@ if flag_vendor in ['JM', 'jm']:
 elif flag_vendor in ['OM', 'om']:
    MSL_usage = '3.2.3 - used components: none' 
    MSL_version = '3.2.3'
-   BPL_version = 'Bioprocess Library version 2.1.1-beta' 
+   BPL_version = 'Bioprocess Library version 2.1.1' 
 else:    
    print('There is no FMU for this platform')
 

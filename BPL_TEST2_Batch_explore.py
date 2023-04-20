@@ -56,7 +56,8 @@
 # 2023-02-24 - Corrected MSL-suage information for OpenModelica Linux
 # 2023-03-21 - Clean-up and use standard FMU notation
 # 2023-03-28 - Update FMU-explore 0.9.7
-# 2023-03-29 - Update FMU-explore 0.9.7 competed!
+# 2023-03-29 - Update FMU-explore 0.9.7 completed!
+# 2023-04-19 - Compiled for Ubuntu 20.04 and changed BPL_version
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -144,7 +145,7 @@ if flag_vendor in ['JM', 'jm']:
 elif flag_vendor in ['OM', 'om']:
    MSL_usage = '3.2.3 - used components: none' 
    MSL_version = '3.2.3'
-   BPL_version = 'Bioprocess Library version 2.1.1-beta' 
+   BPL_version = 'Bioprocess Library version 2.1.1' 
 else:    
    print('There is no FMU for this platform')
 
