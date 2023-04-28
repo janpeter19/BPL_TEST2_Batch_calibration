@@ -25,6 +25,8 @@ or alternatively (experimentally)
 In the menu choose Runtime/Run all. If you use the alternative notebook click symbol Open in Colab first.
 The installation takes just a few minutes. The subsequent execution of all the simulations takes just about a minute or so.
 
+See also the related repositories: BPL_TEST2_Batch and BPL_TEST2_design_space.
+
 License information:
 * The binary-file with extension FMU is shared under the permissive MIT-license
 * The other files are shared under the GPL 3.0 license
