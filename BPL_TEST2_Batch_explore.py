@@ -61,6 +61,7 @@
 # 2023-05-31 - Adjusted to from importlib.meetadata import version
 # 2023-09-12 - Updated to FMU-explore 0.9.8 and introduced proces diagram
 # 2024-03-02 - Update FMU-explore 0.9.9 - now with _0 replaced with _start everywhere
+# 2024-05-12 - Polish the scirpt
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -75,8 +76,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.image as img
 import zipfile 
+
 from pyfmi import load_fmu
 from pyfmi.fmi import FMUException
+
 from itertools import cycle
 from importlib.metadata import version  
 
@@ -391,7 +394,7 @@ def describe(name, decimals=3):
       
 #------------------------------------------------------------------------------------------------------------------
 #  General code 
-FMU_explore = 'FMU-explore version 0.9.9'
+FMU_explore = 'FMU-explore version 1.0.0'
 #------------------------------------------------------------------------------------------------------------------
 
 # Define function par() for parameter update
