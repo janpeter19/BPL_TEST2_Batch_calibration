@@ -26,6 +26,7 @@
 # 2023-05-31 - Adjusted to from importlib.meetadata import version
 # 2023-09-12 - Updated to FMU-explore 0.9.8 and introduced proces diagram
 # 2024-03-02 - Update FMU-explore 0.9.9 - now with _0 replaced with _start everywhere
+# 2024-05-14 - Polish the script
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -97,7 +98,7 @@ if flag_vendor in ['JM', 'jm']:
 elif flag_vendor in ['OM', 'om']:
    MSL_usage = '3.2.3 - used components: none' 
    MSL_version = '3.2.3'
-   BPL_version = 'Bioprocess Library version 2.1.2 prel' 
+   BPL_version = 'Bioprocess Library version 2.2.0' 
 else:    
    print('There is no FMU for this platform')
 
@@ -105,14 +106,14 @@ else:
 global simulationTime; simulationTime = 5.0
 global prevFinalTime; prevFinalTime = 0
 
-# Provide process diagram on disk
-fmu_process_diagram ='BPL_GUI_TEST2_Batch_process_diagram_om.png'
-
 # Dictionary of time discrete states
 timeDiscreteStates = {} 
 
 # Define a minimal compoent list of the model as a starting point for describe('parts')
 component_list_minimum = ['bioreactor', 'bioreactor.culture']
+
+# Provide process diagram on disk
+fmu_process_diagram ='BPL_GUI_TEST2_Batch_process_diagram_om.png'
 
 #------------------------------------------------------------------------------------------------------------------
 #  Specific application constructs: stateDict, parDict, diagrams, newplot(), describe()
@@ -326,7 +327,7 @@ def describe(name, decimals=3):
       
 #------------------------------------------------------------------------------------------------------------------
 #  General code 
-FMU_explore = 'FMU-explore for FMPy version 0.9.9'
+FMU_explore = 'FMU-explore for FMPy version 1.0.0'
 #------------------------------------------------------------------------------------------------------------------
 
 # Define function par() for parameter update
