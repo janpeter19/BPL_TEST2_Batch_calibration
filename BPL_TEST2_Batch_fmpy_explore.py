@@ -68,7 +68,7 @@ if platform.system() == 'Windows':
    flag_vendor = 'JM' 
    flag_type = 'CS'
 elif platform.system() == 'Linux':
-   print('Linux - run FMU pre-compiled OpenModelica 1.23.0-dev')
+   print('Linux - run FMU pre-compiled OpenModelica')
    fmu_model ='BPL_TEST2_Batch_linux_om_me.fmu'  
    model_description = read_model_description(fmu_model)  
    flag_vendor = 'OM' 
