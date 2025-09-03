@@ -34,6 +34,7 @@
 # 2024-11-07 - Update BPL 2.3.0
 # 2025-06-16 - Test MSL 4.1.0 with OpenModelica genreated FMU
 # 2025-07-28 - Update BPL 2.3.1
+# 2025-08-28 - Run in Ubuntu 24.04 with the old FMU and no problem
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -74,6 +75,7 @@ if platform.system() == 'Windows':
 elif platform.system() == 'Linux':
    print('Linux - run FMU pre-compiled OpenModelica')
    fmu_model ='BPL_TEST2_Batch_linux_om_me.fmu'  
+#  fmu_model ='BPL_TEST2_Batch_linux_2404_om_me.fmu'  
    model_description = read_model_description(fmu_model)  
    flag_vendor = 'OM' 
    flag_type = 'ME'
