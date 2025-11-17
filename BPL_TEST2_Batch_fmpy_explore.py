@@ -36,6 +36,7 @@
 # 2025-07-28 - Update BPL 2.3.1
 # 2025-08-28 - Run in Ubuntu 24.04 with the old FMU and no problem
 # 2025-11-10 - Update to FMU-explore 1.0.2
+# 2025-11-16 - FMU-explore 1.0.2 corrected
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -66,7 +67,6 @@ if platform.system() == 'Linux': locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 #------------------------------------------------------------------------------------------------------------------
 
 # Provde the right FMU and load for different platforms in user dialogue:
-global model_description
 if platform.system() == 'Windows':
    print('Windows - run FMU pre-compiled JModelica 2.14')
    fmu_model ='BPL_TEST2_Batch_windows_jm_cs.fmu'     
@@ -83,13 +83,13 @@ else:
 
 # Provide various opts-profiles
 if flag_type in ['CS', 'cs']:
-   opts_std = {'ncp': 500}
-   opts_data = {'ncp': 12}
-   opts_fast = {'ncp': 12}
+   opts_std = {'NCP': 500}
+   opts_data = {'NCP': 12}
+   opts_fast = {'NCP': 12}
 elif flag_type in ['ME', 'me']:
-   opts_std = {'ncp': 500}
-   opts_data = {'ncp': 12}
-   opts_fast = {'ncp': 12}
+   opts_std = {'NCP': 500}
+   opts_data = {'NCP': 12}
+   opts_fast = {'NCP': 12}
 else:    
    print('There is no FMU for this platform')
 
@@ -111,8 +111,8 @@ else:
    print('There is no FMU for this platform')
 
 # Simulation time
-global simulationTime; simulationTime = 5.0
-global prevFinalTime; prevFinalTime = 0
+simulationTime = 5.0
+prevFinalTime = 0
 
 # Dictionary of time discrete states
 timeDiscreteStates = {} 
@@ -152,9 +152,8 @@ for key in stateValue.keys():
         print('The state vector has more than 1000 states')
         break
 
-global stateValueInitialLoc; stateValueInitialLoc = {}
+stateValueInitialLoc = {}
 for value in stateValueInitial.values(): stateValueInitialLoc[value] = value
-
 
 # Create dictionaries parValue[] and parLocation[]
 parValue = {}
@@ -176,8 +175,8 @@ parLocation['qSmax'] = 'bioreactor.culture.qSmax'
 parLocation['Ks'] = 'bioreactor.culture.Ks'
 
 # Extra only for describe()
-global key_variables; key_variables = []
-parLocation['mu'] = 'bioreactor.culture.mu'; key_variables.append(parLocation['mu'])
+keyVariables = []
+parLocation['mu'] = 'bioreactor.culture.mu'; keyVariables.append(parLocation['mu'])
 
 # Parameter value check - especially for hysteresis to avoid runtime error
 parCheck = []
@@ -189,7 +188,6 @@ parCheck.append("parValue['VX_start'] >= 0")
 parCheck.append("parValue['VS_start'] >= 0")
 
 # Create list of diagrams to be plotted by simu()
-global diagrams
 diagrams = []
 
 # Define standard diagrams
@@ -500,11 +498,11 @@ def simu(simulationTime=simulationTime, mode='Initial', options=opts_std, diagra
          validate = False,
          start_time = 0,
          stop_time = simulationTime,
-         output_interval = simulationTime/options['ncp'],
+         output_interval = simulationTime/options['NCP'],
          record_events = True,
          start_values = start_values,
          fmi_call_logger = None,
-         output = list(set(extract_variables(diagrams) + list(stateValue.keys()) + key_variables))
+         output = list(set(extract_variables(diagrams) + list(stateValue.keys()) + keyVariables))
       )
       
       simulationDone = True
@@ -536,11 +534,11 @@ def simu(simulationTime=simulationTime, mode='Initial', options=opts_std, diagra
             validate = False,
             start_time = prevFinalTime,
             stop_time = prevFinalTime + simulationTime,
-            output_interval = simulationTime/options['ncp'],
+            output_interval = simulationTime/options['NCP'],
             record_events = True,
             start_values = start_values,
             fmi_call_logger = None,
-            output = list(set(extract_variables(diagrams) + list(stateValue.keys()) + key_variables))
+            output = list(set(extract_variables(diagrams) + list(stateValue.keys()) + keyVariables))
          )
       
          simulationDone = True
