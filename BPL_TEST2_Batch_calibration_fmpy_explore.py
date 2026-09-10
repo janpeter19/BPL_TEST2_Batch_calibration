@@ -1,8 +1,9 @@
-# setup data TEST2_Batch_c 
+# setup application functions BPL_TEST2_Batch_calibration, dependent on previous import from fmu_explore 
 # Author: Jan Peter Axelsson
 #------------------------------------------------------------------------------------------------------------------
-# 2026-08-28 - Created
+# 2026-09-10 - Created
 #------------------------------------------------------------------------------------------------------------------
+
 
 # Define standard diagrams
 def newplot(title='Batch cultivation', plotType='TimeSeries'):
@@ -13,11 +14,11 @@ def newplot(title='Batch cultivation', plotType='TimeSeries'):
         diagram = 'PhasePlane' """
     
    # Reset pens
-   resetPen()
-
+   resetPen() 
+    
    # Plot diagram 
    if plotType == 'TimeSeries':
-   
+
       ax1 = plt.subplot(2,1,1)
       ax2 = plt.subplot(2,1,2)
 
@@ -40,8 +41,8 @@ def newplot(title='Batch cultivation', plotType='TimeSeries'):
       diagrams.append("ax[0].legend(['X','S'])")   
       diagrams.append("ax[1].plot(t,sim_res['bioreactor.culture.q[1]'],color='r',linestyle=linetype)")   
 
-   elif plotType == 'Textbook_1':
-   
+   elif plotType == 'TimeSeries2':
+
       ax1 = plt.subplot(2,1,1)
       ax2 = plt.subplot(2,1,2)
       
@@ -61,38 +62,7 @@ def newplot(title='Batch cultivation', plotType='TimeSeries'):
       diagrams.clear()
       diagrams.append("ax[0].plot(t,sim_res['bioreactor.c[2]'],color='b',linestyle=linetype)")
       diagrams.append("ax[1].plot(t,sim_res['bioreactor.c[1]'],color='b',linestyle=linetype)")   
-
-   elif plotType == 'Textbook_2':
-   
-      ax11 = plt.subplot(2,2,1)
-      ax12 = plt.subplot(2,2,2)
-      ax21 = plt.subplot(2,2,3)
-      ax22 = plt.subplot(2,2,4)
-
-      ax11.set_title(title)
-      ax11.grid()
-      ax11.set_ylabel('S [g/L]')
       
-      ax21.grid()
-      ax21.set_ylabel('X [g/L]')
-      ax21.set_xlabel('Time [h]') 
-      
-      ax12.set_title(title)
-      ax12.grid()
-      ax12.set_ylabel('qS [g/(L*h)]')
- 
-      ax22.grid()
-      ax22.set_ylabel('mu [1/h]')
-      ax22.set_xlabel('Time [h]')     
-           
-      # List of commands to be executed by simu() after a simulation  
-      diagrams.clear()
-      diagrams.append("ax11.plot(t,sim_res['bioreactor.c[2]'],color='b',linestyle=linetype)")
-      diagrams.append("ax21.plot(t,sim_res['bioreactor.c[1]'],color='b',linestyle=linetype)")
-      diagrams.append("ax12.set_title('- microscopic world')")   
-      diagrams.append("ax12.plot(t,-sim_res['bioreactor.culture.q[2]'],color='b',linestyle=linetype)")
-      diagrams.append("ax22.plot(t,sim_res['bioreactor.culture.q[1]'],color='b',linestyle=linetype)")    
-
    elif plotType == 'Demo_1':
    
       ax1 = plt.subplot(2,1,1)
@@ -112,14 +82,14 @@ def newplot(title='Batch cultivation', plotType='TimeSeries'):
       
       # List of commands to be executed by simu() after a simulation  
       diagrams.clear()
-      diagrams.append("ax[0].plot(t,sim_res['bioreactor.c[2]'],color='b',linestyle=linetype)")
-      diagrams.append("ax[1].plot(t,sim_res['bioreactor.c[1]'],color='r',linestyle=linetype)")   
+      diagrams.append("ax[0].plot(sim_res['time'],sim_res['bioreactor.c[2]'],color='b',linestyle=linetype)")
+      diagrams.append("ax[1].plot(sim_res['time'],sim_res['bioreactor.c[1]'],color='r',linestyle=linetype)")   
       
    elif plotType == 'Demo_2':
    
       ax1 = plt.subplot(2,1,1)
       ax2 = plt.subplot(2,1,2)
-
+      
       ax.clear()
       ax.append(ax1)
       ax.append(ax2)
@@ -134,13 +104,14 @@ def newplot(title='Batch cultivation', plotType='TimeSeries'):
       
       # List of commands to be executed by simu() after a simulation  
       diagrams.clear()
-      diagrams.append("ax[0].plot(t,sim_res['bioreactor.c[2]'],'b*')")
-      diagrams.append("ax[1].plot(t,sim_res['bioreactor.c[1]'],'r*')")   
+      diagrams.append("ax[0].plot(sim_res['time'],sim_res['bioreactor.c[2]'],'b*')")
+      diagrams.append("ax[1].plot(sim_res['time'],sim_res['bioreactor.c[1]'],'r*')") 
 
    elif plotType == 'PhasePlane':
-
+       
       ax1 = plt.subplot(1,1,1)
-    
+      
+      ax.clear()
       ax.append(ax1)
     
       ax[0].set_title(title)
@@ -150,7 +121,7 @@ def newplot(title='Batch cultivation', plotType='TimeSeries'):
 
       # List of commands to be executed by simu() after a simulation         
       diagrams.clear()
-      diagrams.append("ax[0].plot(sim_res['bioreactor.c[1]'],sim_res['bioreactor.c[2]'],color='b',linestyle=linetype)")
+      diagrams.append("ax.plot(sim_res['bioreactor.m[1]'],sim_res['bioreactor.m[2]'],color='b',linestyle=linetype)")
              
    else:
       print("Plot window type not correct")
@@ -164,15 +135,15 @@ def describe(name, decimals=3):
  
    elif name in ['broth', 'liquidphase', 'media']: 
       """Describe medium used"""
-      X = model.get('liquidphase.X')[0] 
-      X_description = model.get_variable_description('liquidphase.X') 
-      X_mw = model.get('liquidphase.mw[1]')[0]
+      
+      X = model_get('liquidphase.X') 
+      X_description = model_get_variable_description('liquidphase.X') 
+      X_mw = model_get('liquidphase.mw[1]')
          
-      S = model.get('liquidphase.S')[0] 
-      S_description = model.get_variable_description('liquidphase.S')
-      S_mw = model.get('liquidphase.mw[2]')[0]
+      S = model_get('liquidphase.S') 
+      S_description = model_get_variable_description('liquidphase.S')
+      S_mw = model_get('liquidphase.mw[2]')
          
-      print()
       print('Reactor broth substances included in the model')
       print()
       print(X_description, '    index = ', X, 'molecular weight = ', X_mw, 'Da')
@@ -187,6 +158,7 @@ def describe(name, decimals=3):
    else:
       describe_general(name, decimals)
       
+
 #------------------------------------------------------------------------------------------------------------------
 #  Startup
 #------------------------------------------------------------------------------------------------------------------
