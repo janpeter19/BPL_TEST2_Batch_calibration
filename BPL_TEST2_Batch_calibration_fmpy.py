@@ -1,7 +1,8 @@
-# setup data TEST2_Batch_calibration_fmpy 
+# Setup data TEST2_Batch_calibration_fmpy 
 # Author: Jan Peter Axelsson
 #------------------------------------------------------------------------------------------------------------------
 # 2026-09-10 - Created
+# 2026-09-18 - Decrease the framework to what is necessary and move matlotlib to the other setup-file
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -9,11 +10,8 @@
 #------------------------------------------------------------------------------------------------------------------
 
 # Setup framework
-import sys
 import platform
 import locale
-import numpy as np 
-import matplotlib.pyplot as plt 
 from fmpy import simulate_fmu
 from fmpy import read_model_description
 

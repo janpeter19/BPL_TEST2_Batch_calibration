@@ -1,9 +1,19 @@
-# setup application functions BPL_TEST2_Batch_calibration, dependent on previous import from fmu_explore 
+# Setup application functions BPL_TEST2_Batch_calibration, dependent on previous import from fmu_explore 
 # Author: Jan Peter Axelsson
 #------------------------------------------------------------------------------------------------------------------
 # 2026-09-10 - Created
+# 2026-09-18 - Bring in matplotlib.pylot since used here
 #------------------------------------------------------------------------------------------------------------------
 
+#------------------------------------------------------------------------------------------------------------------
+#  Framework
+#------------------------------------------------------------------------------------------------------------------
+
+import matplotlib.pyplot as plt 
+
+#------------------------------------------------------------------------------------------------------------------
+#  Specific application constructs:  newplot(), describe()
+#------------------------------------------------------------------------------------------------------------------
 
 # Define standard diagrams
 def newplot(title='Batch cultivation', plotType='TimeSeries'):
