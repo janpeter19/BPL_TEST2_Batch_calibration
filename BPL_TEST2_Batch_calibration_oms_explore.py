@@ -15,6 +15,7 @@
 import numpy as np
 import scipy.io
 import matplotlib.pyplot as plt
+import pandas as pd
 
 # ------------------------------------------------------------------------------------------------------------------
 #  Specific application constructs:  newplot(), describe()
@@ -148,10 +149,10 @@ def newplot(title="Batch cultivation", plotType="TimeSeries"):
         # List of commands to be executed by simu() after a simulation
         diagrams.clear()
         diagrams.append(
-            "ax[0].plot(t, sim_res['data_2'][3]],color='b',linestyle=linetype)"
+            "ax[0].plot(t, sim_res['data_2'][3], color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[1].plot(t, sim_res['data_2'][2]],color='r',linestyle=linetype)"
+            "ax[1].plot(t, sim_res['data_2'][2], color='r', linestyle=linetype)"
         )
 
     elif plotType == "Demo_2":
