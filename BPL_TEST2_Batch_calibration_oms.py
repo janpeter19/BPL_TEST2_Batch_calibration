@@ -30,7 +30,7 @@ if platform.system() == 'Windows':
     flag_vendor = 'JM'
     flag_type = 'CS'
     fmu_model ='BPL_TEST2_Batch_windows_jm_cs.fmu'        
-#   model = load_fmu(fmu_model, log_level=0)  
+#    model = load_fmu(fmu_model, log_level=0)  
 elif platform.system() == 'Linux': 
     flag_vendor = 'OM'
     flag_type = 'ME'
@@ -41,7 +41,7 @@ elif platform.system() == 'Linux':
 #            model = load_fmu(fmu_model, log_level=0) 
         if flag_type in ['ME','me']:         
             fmu_model ='BPL_TEST2_Batch_linux_om_me.fmu' 
-#           fmu_model ='BPL_TEST2_Batch_linux_2404_om_me.fmu'     
+#            fmu_model ='BPL_TEST2_Batch_linux_2404_om_me.fmu'     
 #            model = load_fmu(fmu_model, log_level=0)
     else:    
         print('There is no FMU for this platform')
@@ -63,11 +63,11 @@ else:
     print('There is no FMU for this platform')
 
 # -------------------------------------------------------------------------------------------------
-#  Specific application constructs: parValue, parLocation, parCheck, diagrams, ax, lines
+#  Specific application constructs: parValue, parLocation, parCheck, diagrams, ax, lines, options
 # -------------------------------------------------------------------------------------------------
 
 # Simulation time
-simulationTime = 5.0
+simulationTime = 6.0
 
 # Dictionary of time discrete states
 timeDiscreteStates = {}
@@ -122,4 +122,5 @@ ax = []
 lines = ['-','--',':','-.']
 
 # Options
-options = ['model.setLoggingInterval(0.5)']
+opts_std = ['model.setLoggingInterval(simulationTime/500)']
+opts_data = ['model.setLoggingInterval(0.5)']
