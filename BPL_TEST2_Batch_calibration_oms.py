@@ -122,4 +122,4 @@ ax = []
 lines = ['-','--',':','-.']
 
 # Options
-options = ['fmu.setLoggingInterval(0.5)']
+options = ['model.setLoggingInterval(0.5)']
