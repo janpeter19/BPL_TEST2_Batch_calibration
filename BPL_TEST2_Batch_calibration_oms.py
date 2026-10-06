@@ -6,6 +6,7 @@
 # 2026-09-18 - Decrease the framework to what is necessary and move matlotlib to the other setup-file
 # 2026-09-25 - Change indentaiton from 3 spaces to 4
 # 2026-10-05 - Modified for OMS
+# 2026-10-06 - Brought back options as a list for OMS
 #------------------------------------------------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------------------------------
@@ -119,3 +120,6 @@ ax = []
 
 # Create list of pens for the diagrams
 lines = ['-','--',':','-.']
+
+# Options
+options = ['fmu.setLoggingInterval(0.5)']
