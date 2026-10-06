@@ -23,7 +23,7 @@ A Jupyter notebook that go through the parameter estimation and generate the fig
 or alternatively
 [start BPL notebook with FMPy](https://colab.research.google.com/github/janpeter19/BPL_TEST2_Batch_calibration/blob/main/BPL_TEST2_Batch_calibration_fmpy_colab.ipynb)
 or (experimentally)
-[start BPL notebook with OMSimulator](https://colab.research.google.com/github/janpeter19/BPL_TEST2_Batch_calibrartion/blob/main/BPL_TEST2_Batch_calibration_oms_colab.ipynb).
+[start BPL notebook with OMSimulator](https://colab.research.google.com/github/janpeter19/BPL_TEST2_Batch_calibration/blob/main/BPL_TEST2_Batch_calibration_oms_colab.ipynb).
 Then you in the menu choose Runtime/Run all. 
 
 In the menu choose Runtime/Run all.
