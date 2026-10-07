@@ -6,6 +6,7 @@
 # 2026-09-18 - Brought numpy back here since used in several notebooks
 # 2026-09-25 - Change indentaiton from 3 spaces to 4 using black
 # 2026-10-05 - Modified for OMS
+# 2026-10-07 - Diagrams modified for DyMat
 # ------------------------------------------------------------------------------------------------------------------
 
 # ------------------------------------------------------------------------------------------------------------------
@@ -149,10 +150,12 @@ def newplot(title="Batch cultivation", plotType="TimeSeries"):
         # List of commands to be executed by simu() after a simulation
         diagrams.clear()
         diagrams.append(
-            "ax[0].plot(t, sim_res['data_2'][3], color='b', linestyle=linetype)"
+#            "ax[0].plot(t, sim_res['data_2'][3], color='b', linestyle=linetype)"
+            "ax[0].plot(t, sim_res['Batch.bioreactor.m[2]' , color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[1].plot(t, sim_res['data_2'][2], color='r', linestyle=linetype)"
+#            "ax[1].plot(t, sim_res['data_2'][2], color='r', linestyle=linetype)"
+            "ax[1].plot(t, sim_res['Batch.bioreactor.m[1]', color='r', linestyle=linetype)"
         )
 
     elif plotType == "Demo_2":
@@ -174,8 +177,9 @@ def newplot(title="Batch cultivation", plotType="TimeSeries"):
 
         # List of commands to be executed by simu() after a simulation
         diagrams.clear()
-        diagrams.append("ax[0].plot(t, sim_res['data_2'][3],'b*')")
-        diagrams.append("ax[1].plot(t, sim_res['data_2'][2],'r*')")
+#        diagrams.append("ax[0].plot(t, sim_res['data_2'][3],'b*')")
+        diagrams.append("ax[0].plot(t, sim_res['Batch.bioreactor.m[2]', 'b*')")
+        diagrams.append("ax[1].plot(t, sim_res['Batch.bioreactor.m[1]', 'r*')")
 
     elif plotType == "PhasePlane":
 
