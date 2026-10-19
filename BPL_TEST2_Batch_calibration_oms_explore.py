@@ -231,6 +231,6 @@ FMU_explore_info()
 del parValue, parLocation, parCheck
 del fmu_model, fmu_process_diagram
 del MSL_usage, MSL_version, BPL_version
-del options, simulationTime, timeDiscreteStates
+del simulationTime, timeDiscreteStates
 del flag_type, flag_vendor
 del lines
