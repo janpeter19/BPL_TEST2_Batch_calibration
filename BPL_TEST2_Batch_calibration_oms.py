@@ -7,6 +7,7 @@
 # 2026-09-25 - Change indentaiton from 3 spaces to 4
 # 2026-10-05 - Modified for OMS
 # 2026-10-06 - Brought back options as a list for OMS
+# 2026-11-07 - Corrected opts_std to refer to self.model
 #------------------------------------------------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------------------------------
@@ -122,5 +123,5 @@ ax = []
 lines = ['-','--',':','-.']
 
 # Options
-opts_std = ['model.setLoggingInterval(simulationTime/500)']
-opts_data = ['model.setLoggingInterval(0.5)']
+opts_std = ['self.model.setLoggingInterval(simulationTime/500)']
+opts_data = ['self.model.setLoggingInterval(0.5)']
