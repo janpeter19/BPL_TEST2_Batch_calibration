@@ -1,4 +1,4 @@
-# Setup data TEST2_Batch_c
+# Setup data TEST2_Batch_calibration
 # Author: Jan Peter Axelsson
 # ------------------------------------------------------------------------------------------------------------------
 # 2026-08-28 - Created
