@@ -8,6 +8,7 @@
 # 2026-10-05 - Modified for OMS
 # 2026-10-06 - Brought back options as a list for OMS
 # 2026-11-07 - Corrected opts_std to refer to self.model
+# 2026-11-30 - Corrected opts_std to use self.simulationTime
 #------------------------------------------------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------------------------------
@@ -123,5 +124,5 @@ ax = []
 lines = ['-','--',':','-.']
 
 # Options
-opts_std = ['self.model.setLoggingInterval(simulationTime/500)']
+opts_std = ['self.model.setLoggingInterval(self.simulationTime/500)']
 opts_data = ['self.model.setLoggingInterval(0.5)']
