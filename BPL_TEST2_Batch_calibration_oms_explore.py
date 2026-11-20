@@ -8,6 +8,7 @@
 # 2026-10-05 - Modified for OMS
 # 2026-10-07 - Diagrams modified for DyMat
 # 2026-10-19 - Added clean-up section at the end
+# 2026-11-20 - Added describe_general to describe although not complete
 # ------------------------------------------------------------------------------------------------------------------
 
 # ------------------------------------------------------------------------------------------------------------------
@@ -214,7 +215,7 @@ def describe(name, decimals=3):
         describe_MSL()
 
     else:
-        dummy = decimals #describe_general(name, decimals)
+        describe_general(name, decimals)
 
 
 # ------------------------------------------------------------------------------------------------------------------
