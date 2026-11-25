@@ -9,6 +9,7 @@
 # 2026-10-07 - Diagrams modified for DyMat
 # 2026-10-19 - Added clean-up section at the end
 # 2026-11-20 - Added describe_general to describe although not complete
+# 2026-11-25 - Now component_list_minimum is handled as a parameter the class of FMU_explore
 # ------------------------------------------------------------------------------------------------------------------
 
 # ------------------------------------------------------------------------------------------------------------------
@@ -211,6 +212,9 @@ def describe(name, decimals=3):
     if name == "culture":
         print("Simplified text book model - only substrate S and cell concentration X")
 
+    elif name in ["parts"]:
+        describe_parts()
+
     elif name in ["MSL"]:
         describe_MSL()
 
@@ -230,7 +234,7 @@ FMU_explore_info()
 #------------------------------------------------------------------------------------------------------------------
 
 del parValue, parLocation, parCheck
-del fmu_model, fmu_process_diagram
+del fmu_model, fmu_process_diagram, component_list_minimum
 del MSL_usage, MSL_version, BPL_version
 del simulationTime, timeDiscreteStates
 del flag_type, flag_vendor
